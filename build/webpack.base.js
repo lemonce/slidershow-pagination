@@ -17,7 +17,7 @@ const babelLoader = {
 
 module.exports = {
 	entry: {
-		test: path.resolve(__dirname, '../app/index.js')
+		index: path.resolve(__dirname, '../src/index.js')
 	},
 	output: {
 		path: path.resolve(__dirname, '../dist'),

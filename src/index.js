@@ -5,11 +5,11 @@ function traversalElement(rootElement, parentData, {pre, post}) {
 	const childNodes = rootElement.childNodes;
 	const data = {};
 	
-	pre(node, data, parentData);
+	pre(rootElement, data, parentData);
 	childNodes.forEach(node => {
 		traversalElement(node, data, {pre, post});
 	});
-	post(node, data, parentData);
+	post(rootElement, data, parentData);
 }
 
 function isNecessary(sourceContainer, node) {
@@ -28,7 +28,7 @@ function isNecessary(sourceContainer, node) {
 function push(destinationContainer, node) {
 	const nodeCopy = node.cloneNode();
 
-	destinationContainer.appendChild(node);
+	destinationContainer.appendChild(nodeCopy);
 
 }
 
@@ -69,7 +69,7 @@ function renderPageview(sourceContainer) {
 }
 
 function PageviewFactory() {
-	const pageContainer =  document.createElement('div');
+	const pageContainer =  document.createDocumentFragment();
 
 	return pageContainer;
 }
@@ -92,7 +92,11 @@ function paginate(node) {
 function render() {
 	//TODO copy, pad, mark, paginative, repeat, delete
 	const copy = container.cloneNode(true);
-	const copyHeight = copy.height;
+	
+	document.body.appendChild(copy);
+	
+	let copyHeight = copy.offsetHeight;
+
 	const padHeight = copyHeight % height;
 	const pageNumber = Math.ceil(copyHeight / height);
 	const viewContainer = document.createElement('div');
@@ -120,6 +124,7 @@ function render() {
 			}
 		}
 		viewContainer.appendChild(pageView);
+		document.body.appendChild(viewContainer);
 	}
 }
 
@@ -146,4 +151,3 @@ function unsplitContentRouter(node) {
 
 
 //TODO event api thet emit render  
-render();

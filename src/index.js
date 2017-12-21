@@ -1,19 +1,13 @@
 'use strict';
 
-import {isAllOverflow, traversalElement} from './utils';
-import {split} from './split/index'
-
-function isReserved({isAllOverflow, reservedLength}) {
-	return isAllOverflow || reservedLength;
-}
-
-function empty(element) {
-	while (element.firstChild) {
-		element.removeChild(element.firstChild);
-	}
-
-	return element;
-}
+import {
+	isAllOverflow,
+	traversalElement,
+	isReserved,
+	empty,
+	isScrollable
+} from './utils';
+import split from './split/index'
 
 function renderPageview(sourceContainer) {
 	const rootData = {};
@@ -44,14 +38,22 @@ export function render(element) {
 
 	element.parentNode.insertBefore(clone, element);
 
-	while (0/* scrollable */) {
-		//TODO scroll
-
+	while (isScrollable(clone)) {
+		scrollNextPage(clone);
 		pageviewList.push(renderPageview(clone));
-		
 	}
 
 	return pageviewList;
 }
 
-//TODO event api that emit render  
+function scrollNextPage(element) {
+	return element.scrollTop += element.offsetHeight;
+}
+
+//TODO deal with pageviewList
+function handlePageviewList(pageviewList, element) {
+	const fragment = document.createDocumentFragment();
+	pageviewListe.forEach(pageviewElement => {
+		
+	});
+}

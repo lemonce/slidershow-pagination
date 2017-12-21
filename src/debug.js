@@ -1,3 +1,7 @@
+'use strict';
+
 import {render} from './index';
 
-render();
+const element = document.querySelector('.container');
+
+render(element);

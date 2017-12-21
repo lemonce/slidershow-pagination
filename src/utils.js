@@ -18,14 +18,20 @@ export function isAllOverflow(container, node) {
 		return true;
     }
     
-	return node.offsetTop - container.scrollHeight < container.offsetHeight;
+	return node.offsetTop - container.scrollTop < container.offsetHeight;
 }
 
-export function updateAfterSplit(workOrder) {
-
-
+export function isReserved({isAllOverflow, reservedLength}) {
+	return isAllOverflow || reservedLength;
 }
 
+export function empty(element) {
+	while (element.firstChild) {
+		element.removeChild(element.firstChild);
+	}
+
+	return element;
+}
 
 export function getPadHeight(element){
 	const contentHeight = element.scrollHeight;
@@ -33,3 +39,9 @@ export function getPadHeight(element){
 	
 	return contentHeight - contentHeight % containerHeight;
 }
+
+
+export function isScrollable({scrollTop, offsetHeight, scrollHeight}) {
+	return scrollTop + offsetHeight < scrollHeight;
+}
+

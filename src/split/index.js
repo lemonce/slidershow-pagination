@@ -1,25 +1,23 @@
-export default function splitElement(element, options) {
+'use strict';
 
-    return element;
-}
-//TODO text-router, image-routers
-function splitContentRouter(node) {
-	const nodeOffsetTop = node.offsetTop;
-	const visibleContent = height - nodeOffsetTop;
-	const lineHeigt = node.style.lineHeigt;
-	const lineNumber = Math.floor(visibleContent / lineHeigt);
-	let nodeCopy = node.cloneNode();
+import Plan from './class/plan';
+import Rule from './class/rule';
 
-	node.style.height = lineHeigt * lineNumber + 'px';
+export function splitElement(element, container) {
+	//TODO choose spliter
+	const plan = new Plan(element, container);
+	const ruleList = ruleList();
 
-	return node;
-	//TODO split
-}
-
-function unsplitContentRouter(node) {
-	const nodeOffsetTop = node.offsetTop;
-	const visibleContent = height - nodeOffsetTop;
+	ruleList.sort((previous, next) => previous.priority - next.priority);
+	ruleList[0].handle();
+	ruleList.forEach(rule => {
+		plan.handleList = rule.handle;
+	});
 	
-	node.style.offsetTop = height + 'px';
+	return plan;
+}
+
+function ruleList() {
+	return ruleList.forEach(rule => rule.test());
 }
 

@@ -7,7 +7,8 @@ import {
 	empty,
 	isScrollable
 } from './utils';
-import split from './split/index'
+import {splitElement} from './split/index';
+import update from './updater';
 
 function renderPageview(sourceContainer) {
 	const rootData = {};
@@ -20,9 +21,12 @@ function renderPageview(sourceContainer) {
 		},
 		post(node, local, parent) {
 			if (isReserved(local)) {
-				const splited = split(local.clone);
-
-				parent.clone.appendChild(splited);
+				const splited = splitElement(local.clone, sourceContainer);
+				const afterUpdate = update(splited);
+				
+				if(parent.clone != null) {
+					parent.clone.appendChild(afterUpdate);	
+				}
 			} else {
 				parent.reservedLength--;
 			}

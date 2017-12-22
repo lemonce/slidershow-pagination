@@ -1,16 +1,17 @@
 'use strict';
 
 export default class Plan{
-	handleList = [];
 	constructor(element, container) {
 		this.element = element;
+		this.fragment = [];
 		this.container = container;
+		this.handleList = [];
 	}
-	get handleList() {
+	getHandleList() {
 		return this.handleList;
 	}
 
-	set handleList(handle) {
-		this.handleList.push();
+	setHandleList(handle) {
+		this.handleList.push(handle);
 	}
 }

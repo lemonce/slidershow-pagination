@@ -45,3 +45,11 @@ export function isScrollable({scrollTop, offsetHeight, scrollHeight}) {
 	return scrollTop + offsetHeight < scrollHeight;
 }
 
+
+export function getVisibleHeight(element, container) {
+	const offsetTop = element.offsetTop;
+	const scrollTop = container.scrollTop;
+	const offsetHeight = container.offsetHeight;
+
+	return offsetHeight - (offsetTop - scrollTop);
+}

@@ -16,6 +16,7 @@ const babelLoader = {
 };
 
 module.exports = {
+	devtool: "inline-source-map",
 	entry: {
 		index: path.resolve(__dirname, '../src/debug.js')
 	},

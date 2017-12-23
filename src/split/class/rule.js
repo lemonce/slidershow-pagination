@@ -1,14 +1,38 @@
 'use strict';
+const ruleList = [];
 
-export default class Rule {
-	constructor(test, handler, priority) {
-		this.test = test;
-		this.handler = handler;
+export class Rule {
+	constructor({test, handler, priority = 1000}) {
+		this.$test = test;
+		this.$handler = handler;
+
 		this.priority = priority;
 	}
-	push() {
-		Rule.ruleList.push(this);
+
+	test(element) {
+		this.$test(element);
+	}
+
+	render(element) {
+
 	}
 }
 
-Rule.ruleList = [];
+export function createRule(...args) {
+	const newRule = new Rule(...args);
+
+	ruleList.push(newRule);
+
+	return newRule;
+};
+
+export function getReplacement(replacement) {
+	//TODO sort it
+	const targetRuleList = ruleList.filter(rule => rule.test(replacement));
+
+	targetRuleList.forEach(rule => {
+		replacement = rule.render(replacement);
+	});
+
+	return replacement;
+};

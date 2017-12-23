@@ -1,17 +1,21 @@
 'use strict';
 
 export default class Plan{
-	constructor(element, container) {
-		this.element = element;
-		this.fragment = [];
-		this.container = container;
-		this.handleList = [];
+	constructor(destination, replacement, element) {
+		this.$destination = destination;
+		this.$replacement = replacement;
+		this.$element = element;
 	}
-	getHandleList() {
-		return this.handleList;
+	
+	get destination() {
+		return this.$destination;
 	}
 
-	setHandleList(handle) {
-		this.handleList.push(handle);
+	get replacement() {
+		return this.$replacement;
+	}
+
+	get element() {
+		return this.$element;
 	}
 }

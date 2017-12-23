@@ -11,6 +11,8 @@ export function traversalElement(rootElement, {pre, post}, parentData = {}) {
     });
     
 	post(rootElement, data, parentData);
+
+	return data;
 }
 
 export function isAllOverflow(container, node) {
@@ -23,14 +25,6 @@ export function isAllOverflow(container, node) {
 
 export function isReserved({isAllOverflow, reservedLength}) {
 	return isAllOverflow || reservedLength;
-}
-
-export function empty(element) {
-	while (element.firstChild) {
-		element.removeChild(element.firstChild);
-	}
-
-	return element;
 }
 
 export function getPadHeight(element){
@@ -52,4 +46,21 @@ export function getVisibleHeight(element, container) {
 	const offsetHeight = container.offsetHeight;
 
 	return offsetHeight - (offsetTop - scrollTop);
+}
+
+export function hideElement(element) {
+	element.style.position = 'absolute';
+	element.style.top = '0px';
+	element.style.zIndex = -100;
+	element.style.opacity = 0;
+}
+
+export function scrollNextPage(element) {
+	if (isScrollable(element)) {
+		element.scrollTop += element.offsetHeight;
+
+		return true;
+	}
+
+	return false;
 }

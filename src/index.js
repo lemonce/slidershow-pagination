@@ -4,60 +4,77 @@ import {
 	isAllOverflow,
 	traversalElement,
 	isReserved,
-	empty,
-	isScrollable
+	hideElement,
+	scrollNextPage
 } from './utils';
 import {splitElement} from './split/index';
 import update from './updater';
+import Plan from './split/class/plan';
 
-function renderPageview(sourceContainer) {
-	const rootData = {};
-
+function renderPageview(sourceContainer, collector) {
+	const rootData = {
+		clone: collector
+	};
+	
 	traversalElement(sourceContainer, {
 		pre(node, local, parent) {
 			local.isAllOverflow = isAllOverflow(sourceContainer, node);
 			local.reservedLength = node.childNodes.length;
-			local.clone = empty(node.cloneNode());
+			local.clone = node.cloneNode();
 		},
 		post(node, local, parent) {
 			if (isReserved(local)) {
-				const splited = splitElement(local.clone, sourceContainer);
-				const afterUpdate = update(splited);
-				
-				if(parent.clone != null) {
-					parent.clone.appendChild(afterUpdate);	
-				}
+				const replace = splitElement(node, sourceContainer);
+				const plan = new Plan(node.parentNode, replace, node);
+
+				parent.clone.appendChild(replace);
+				update(plan);
 			} else {
 				parent.reservedLength--;
 			}
-		}
+		} 
 	}, rootData);
 
-	return rootData.clone;
+	return rootData.clone;	
 }
 
 export function render(element) {
-	const clone = element.cloneNode(true);
-	const pageviewList = [];
+	const cloneView = element.cloneNode(true);
+	const collector = {
+		pageviewList: [],
+		appendChild(element) {
+			this.pageviewList.push(element);
+		}
+	};
 
-	element.parentNode.insertBefore(clone, element);
+	element.parentNode.insertBefore(cloneView, element);
 
-	while (isScrollable(clone)) {
-		scrollNextPage(clone);
-		pageviewList.push(renderPageview(clone));
-	}
+	do {
+		renderPageview(cloneView, collector);
+	} while(scrollNextPage(cloneView))
 
-	return pageviewList;
+	console.log(collector.pageviewList);
+	//return pageviewList;
+	
+	handlePageviewList(collector.pageviewList, cloneView);
 }
 
-function scrollNextPage(element) {
-	return element.scrollTop += element.offsetHeight;
-}
+
 
 //TODO deal with pageviewList
 function handlePageviewList(pageviewList, element) {
-	const fragment = document.createDocumentFragment();
-	pageviewListe.forEach(pageviewElement => {
-		
+	const width = element.offsetWidth;
+	const height = element.offsetHeight;
+	
+	pageviewList.forEach(pageviewElement => {
+		const destination = document.createElement(element.tagName);
+
+		destination.style.width = width + 'px';
+		destination.style.height = height + 'px';
+		destination.style.float = 'left';
+		destination.appendChild(pageviewElement);
+		destination.style.marginTop = - pageviewList.indexOf(pageviewElement) * height + 'px';
+       
+		element.parentNode.appendChild(pageviewElement);
 	});
 }

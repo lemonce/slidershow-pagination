@@ -5,16 +5,15 @@ export class Rule {
 	constructor({test, handler, priority = 1000}) {
 		this.$test = test;
 		this.$handler = handler;
-
 		this.priority = priority;
 	}
 
-	test(element) {
-		this.$test(element);
+	test(element, container) {
+		return this.$test(element, container);
 	}
 
-	render(element) {
-
+	render(element, container) {
+		return this.$handler(element, container);
 	}
 }
 
@@ -26,12 +25,16 @@ export function createRule(...args) {
 	return newRule;
 };
 
-export function getReplacement(replacement) {
+export function getReplacement(elementInCloneView, container) {
 	//TODO sort it
-	const targetRuleList = ruleList.filter(rule => rule.test(replacement));
+	const targetRuleList = ruleList.filter(rule => {
+		return rule.test(elementInCloneView, container);
+	});
+
+	let replacement = [elementInCloneView.cloneNode(true)];
 
 	targetRuleList.forEach(rule => {
-		replacement = rule.render(replacement);
+		replacement = rule.render(elementInCloneView, container);
 	});
 
 	return replacement;

@@ -1,37 +1,31 @@
 'use strict';
 
 import { createRule } from '../class/rule';
-import {getVisibleHeight} from '../../utils';
+import {
+	getVisibleHeight,
+	getHeight
+} from '../../utils';
 
-function getHeight(element, visibleHeight, container) {
-	const fontSize = window.getComputedStyle(element, null).fontSize;
-	let lineHeight = window.getComputedStyle(element, null).lineHeight;
-	const width = container.scrollWidth;
 
-	if (lineHeight === 'normal') {
-		lineHeight = fontSize;
-	}
-
-	const rows = Math.floor(visibleHeight / parseInt(lineHeight));
-	const columns = Math.floor(width / parseInt(fontSize));
-
-	return rows * columns;
-}
 
 createRule({
 	test(element) {
 		return element.nodeType === 3;
 	},
-	handle(element, container) {
+	handler(element, container) {
 		const visibleHeight = getVisibleHeight(element.parentNode, container);
-		const number = getNumber(element.parentNode, visibleHeight, container);
+		const number = getHeight(element.parentNode, visibleHeight, container);
+		const clone = element.cloneNode(true);
 		const fragment = [];
-	
-		fragment.push(element.substr(0,number), element.substr(number));
-	
-		return {
-			splitedElement: fragment,
-			splitType: 'textSplit'
-		};
+
+		if (element.offsetHeight > visibleHeight) {
+			const string = element.substr(0,number) + '<br/>' +	element.substr(number);
+
+			fragment.push(string);
+		} else {
+			fragment.push(clone);
+		}
+
+		return fragment;
 	}
 });

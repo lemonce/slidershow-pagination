@@ -5,7 +5,8 @@ import {
 	traversalElement,
 	isReserved,
 	hideElement,
-	scrollNextPage
+	scrollNextPage,
+	empty
 } from './utils';
 import {splitElement} from './split/index';
 import update from './updater';
@@ -26,8 +27,10 @@ function renderPageview(sourceContainer, collector) {
 			if (isReserved(local)) {
 				const replace = splitElement(node, sourceContainer);
 				const plan = new Plan(node.parentNode, replace, node);
-
-				parent.clone.appendChild(replace);
+				
+				parent.clone.appendChild(replace[0]);
+				
+				//console.log(replace);
 				update(plan);
 			} else {
 				parent.reservedLength--;
@@ -40,6 +43,7 @@ function renderPageview(sourceContainer, collector) {
 
 export function render(element) {
 	const cloneView = element.cloneNode(true);
+
 	const collector = {
 		pageviewList: [],
 		appendChild(element) {
@@ -47,34 +51,32 @@ export function render(element) {
 		}
 	};
 
+	cloneView.style.overflow = 'hidden';
 	element.parentNode.insertBefore(cloneView, element);
+	cloneView.id = 'clone-view'
 
 	do {
 		renderPageview(cloneView, collector);
 	} while(scrollNextPage(cloneView))
-
-	console.log(collector.pageviewList);
-	//return pageviewList;
 	
-	handlePageviewList(collector.pageviewList, cloneView);
+	console.log(collector.pageviewList);
+	loadPageviewContainer(collector.pageviewList, document.body);
+
+	hideElement(element);
+	// hideElement(cloneView);
 }
 
 
 
 //TODO deal with pageviewList
-function handlePageviewList(pageviewList, element) {
-	const width = element.offsetWidth;
-	const height = element.offsetHeight;
-	
-	pageviewList.forEach(pageviewElement => {
-		const destination = document.createElement(element.tagName);
+function loadPageviewContainer(pageviewList, container) {
+	const element = document.createElement('div');
 
-		destination.style.width = width + 'px';
-		destination.style.height = height + 'px';
-		destination.style.float = 'left';
-		destination.appendChild(pageviewElement);
-		destination.style.marginTop = - pageviewList.indexOf(pageviewElement) * height + 'px';
-       
-		element.parentNode.appendChild(pageviewElement);
+	element.style.backgroundColor = 'yellow';
+
+	pageviewList.forEach(pageviewElement => {
+		element.appendChild(pageviewElement);
 	});
+
+	container.appendChild(element);
 }

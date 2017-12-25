@@ -41,11 +41,11 @@ export function isScrollable({scrollTop, offsetHeight, scrollHeight}) {
 
 
 export function getVisibleHeight(element, container) {
-	const offsetTop = element.offsetTop;
-	const scrollTop = container.scrollTop;
-	const offsetHeight = container.offsetHeight;
+	const elementOffsetTop = element.offsetTop;
+	const containerScrollTop = container.scrollTop;
+	const containerOffsetHeight = container.offsetHeight;
 
-	return offsetHeight - (offsetTop - scrollTop);
+	return containerOffsetHeight + containerScrollTop - elementOffsetTop;
 }
 
 export function hideElement(element) {
@@ -63,4 +63,25 @@ export function scrollNextPage(element) {
 	}
 
 	return false;
+}
+
+export function empty(element) {
+	while (element.firstChild) {
+		element.removeChild(element.firstChild);
+	}
+}
+
+export function getHeight(element, visibleHeight, container) {
+	const fontSize = window.getComputedStyle(element, null).fontSize;
+	let lineHeight = window.getComputedStyle(element, null).lineHeight;
+	const width = container.scrollWidth;
+
+	if (lineHeight === 'normal') {
+		lineHeight = fontSize;
+	}
+
+	const rows = Math.floor(visibleHeight / parseInt(lineHeight));
+	const columns = Math.floor(width / parseInt(fontSize));
+
+	return rows * columns;
 }

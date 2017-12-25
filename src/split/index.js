@@ -7,7 +7,6 @@ import './rule/media';
 import './rule/element';
 
 export function splitElement(element, container) {
-	const clone = element.cloneNode(true);
 	
-	return getReplacement(clone);
+	return getReplacement(element, container);
 };

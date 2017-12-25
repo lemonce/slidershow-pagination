@@ -17,17 +17,18 @@ createRule({
     
         return flag;
     },
-    handle(element, container) {
+    handler(element, container) {
         const height = getVisibleHeight(element, container);
         const placeHolder = document.createElement('div');
+        const clone = element.cloneNode(true);
         const fragment = [];
     
-        placeHolder.style.height = height + 'px';
-        fragment.push(placeHolder, element);
-    
-        return {
-            splitedElement: fragment,
-            splitType: 'mediaSplit'
-        };
+        if (element.offsetHeight > visibleHeight) {
+            placeHolder.style.height = height + 'px';
+            fragment.push(placeHolder, element);
+        } else {
+            fragment.push(clone);
+        }
+        return fragment;
     }
 });

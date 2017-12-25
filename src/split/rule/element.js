@@ -20,8 +20,8 @@ createRule({
 		if (element.offsetHeight > visibleHeight) {
 			elementCopyOne.style.height = visibleHeight + 'px';
 			elementCopyOne.style.overflow = 'hidden';
-			console.log(element.offsetHeight - visibleHeight );
-			//elementCopyTwo.style.height = element.offsetHeight - visibleHeight + 'px';
+			elementCopyTwo.style.height = element.offsetHeight - visibleHeight + 'px';
+			elementCopyTwo.scrollTop = visibleHeight;
 			elementCopyTwo.scrollTop = visibleHeight;
 			fragment.push(elementCopyOne, elementCopyTwo);
 

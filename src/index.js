@@ -22,16 +22,15 @@ function renderPageview(sourceContainer, collector) {
 			local.isAllOverflow = isAllOverflow(sourceContainer, node);
 			local.reservedLength = node.childNodes.length;
 			local.clone = node.cloneNode();
+			
 		},
 		post(node, local, parent) {
 			if (isReserved(local)) {
-				const replace = splitElement(node, sourceContainer);
-				const plan = new Plan(node.parentNode, replace, node);
-				
-				parent.clone.appendChild(replace[0]);
-				
-				//console.log(replace);
-				update(plan);
+				const value = splitElement(node, sourceContainer);
+				const plan = new Plan(node.parentNode, value, node);
+				console.log(node === sourceContainer);
+				parent.clone.appendChild(value.replacement[0]);
+				update(plan);	
 			} else {
 				parent.reservedLength--;
 			}
@@ -53,7 +52,6 @@ export function render(element) {
 
 	cloneView.style.overflow = 'hidden';
 	element.parentNode.insertBefore(cloneView, element);
-	cloneView.id = 'clone-view'
 
 	do {
 		renderPageview(cloneView, collector);

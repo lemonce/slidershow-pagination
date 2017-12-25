@@ -5,6 +5,7 @@ import {getReplacement} from './class/rule';
 import './rule/text';
 import './rule/media';
 import './rule/element';
+import './rule/container';
 
 export function splitElement(element, container) {
 	

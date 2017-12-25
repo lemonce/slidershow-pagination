@@ -2,10 +2,11 @@
 const ruleList = [];
 
 export class Rule {
-	constructor({test, handler, priority = 1000}) {
+	constructor({test, handler, priority = 1000, isContainer = false}) {
 		this.$test = test;
 		this.$handler = handler;
 		this.priority = priority;
+		this.isContainer = isContainer
 	}
 
 	test(element, container) {
@@ -31,11 +32,14 @@ export function getReplacement(elementInCloneView, container) {
 		return rule.test(elementInCloneView, container);
 	});
 
-	let replacement = [elementInCloneView.cloneNode(true)];
+	let value;
 
 	targetRuleList.forEach(rule => {
-		replacement = rule.render(elementInCloneView, container);
+		value = {
+			replacement: rule.render(elementInCloneView, container),
+			isContainer: rule.isContainer
+		}
 	});
 
-	return replacement;
+	return value;
 };

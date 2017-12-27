@@ -31,7 +31,7 @@ export function getPadHeight(element){
 	const contentHeight = element.scrollHeight;
 	const containerHeight = element.offsetHeight;
 	
-	return contentHeight - contentHeight % containerHeight;
+	return containerHeight - contentHeight % containerHeight;
 }
 
 
@@ -58,7 +58,7 @@ export function hideElement(element) {
 export function scrollNextPage(element) {
 	if (isScrollable(element)) {
 		element.scrollTop += element.offsetHeight;
-
+		
 		return true;
 	}
 
@@ -84,4 +84,35 @@ export function getHeight(element, visibleHeight, container) {
 	const columns = Math.floor(width / parseInt(fontSize));
 
 	return rows * columns;
+}
+
+export function addChildNodes(parent, value) {
+	
+	if (value.handlerName === 'spliteElement' && value.isSplit) {
+		const fragment = document.createDocumentFragment();
+		//const height = value.replacement[0].style.height;
+
+		value.replacement.forEach(part => {
+			fragment.appendChild(part);
+		});
+
+		parent.appendChild(fragment);
+
+		value.replacement.forEach(part => {
+			if (part.id) {
+				part.scrollTop = part.id;
+			}
+		});
+		//value.replacement[1].scrollTop = parseInt(height);
+		
+		return;
+	}
+	
+	parent.appendChild(value.replacement[0]);
+	
+	if (value.replacement[0].id) {
+		console.log(value.replacement[0]);
+		value.replacement[0].scrollTop = value.replacement[0].id;
+	}
+
 }

@@ -6,8 +6,6 @@ import {
 	getHeight
 } from '../../utils';
 
-
-
 createRule({
 	test(element) {
 		return element.nodeType === 3;
@@ -22,10 +20,13 @@ createRule({
 			const string = element.substr(0,number) + '<br/>' +	element.substr(number);
 
 			fragment.push(string);
+			this.isSplit = true;
 		} else {
 			fragment.push(clone);
+			this.isSplit = false;
 		}
 
 		return fragment;
-	}
+	},
+	handlerName:'spliteText'
 });

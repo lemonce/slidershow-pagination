@@ -6,7 +6,9 @@ import {
 	isReserved,
 	hideElement,
 	scrollNextPage,
-	empty
+	empty,
+	getPadHeight,
+	addChildNodes
 } from './utils';
 import {splitElement} from './split/index';
 import update from './updater';
@@ -28,9 +30,11 @@ function renderPageview(sourceContainer, collector) {
 			if (isReserved(local)) {
 				const value = splitElement(node, sourceContainer);
 				const plan = new Plan(node.parentNode, value, node);
-				console.log(node === sourceContainer);
-				parent.clone.appendChild(value.replacement[0]);
-				update(plan);	
+				
+				//parent.clone.appendChild(value.replacement[0]);
+				addChildNodes(parent.clone, value);
+				//update(plan);	
+				console.log(value.replacement);
 			} else {
 				parent.reservedLength--;
 			}
@@ -53,15 +57,20 @@ export function render(element) {
 	cloneView.style.overflow = 'hidden';
 	element.parentNode.insertBefore(cloneView, element);
 
+	const height = getPadHeight(cloneView);
+	const filling = document.createElement('div');
+
+	filling.style.height = height + 'px';
+	cloneView.appendChild(filling);
+	cloneView.appendChild(filling);
+
 	do {
 		renderPageview(cloneView, collector);
 	} while(scrollNextPage(cloneView))
 	
-	console.log(collector.pageviewList);
-	loadPageviewContainer(collector.pageviewList, document.body);
-
+	loadPageviewContainer(collector.pageviewList, element);
 	hideElement(element);
-	// hideElement(cloneView);
+	//element.parentNode.removeChild(cloneView);
 }
 
 
@@ -74,7 +83,13 @@ function loadPageviewContainer(pageviewList, container) {
 
 	pageviewList.forEach(pageviewElement => {
 		element.appendChild(pageviewElement);
+		
 	});
 
-	container.appendChild(element);
+	container.parentNode.appendChild(element);
+
+	pageviewList.forEach(pageviewElement => {
+		pageviewElement.scrollTop = pageviewList.indexOf(pageviewElement) * container.offsetHeight;
+	});
+	
 }

@@ -4,15 +4,25 @@ export default function update(plan) {
 	const value = plan.replacement;
 	const destination = plan.destination;
 	const element = plan.element;
-	const fragment = document.createDocumentFragment();
 
-	if (value.isContainer) {
+	
+	if (value.handlerName === 'spliteContainer') {
 		return;
 	}
 
-	value.replacement.forEach(part => {
-		fragment.appendChild(part);
-	});
+	if (value.handlerName === 'spliteElement' && value.isSplit) {
+		const height = value.replacement[0].style.height;
+		const fragment = document.createDocumentFragment();
 
-	destination.replaceChild(fragment, element);
+		value.replacement.forEach(part => {
+			fragment.appendChild(part);
+		});
+
+		destination.replaceChild(fragment, element);
+		
+		value.replacement[1].scrollTop = parseInt(height);
+		
+		return;
+	}
+
 }

@@ -13,5 +13,5 @@ createRule({
 
         return fragment;
 	},
-	isContainer: true
+	handlerName:'spliteContainer'
 });

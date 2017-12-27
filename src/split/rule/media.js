@@ -18,17 +18,21 @@ createRule({
         return flag;
     },
     handler(element, container) {
-        const height = getVisibleHeight(element, container);
+        const visibleHeight = getVisibleHeight(element, container);
         const placeHolder = document.createElement('div');
         const clone = element.cloneNode(true);
         const fragment = [];
     
         if (element.offsetHeight > visibleHeight) {
-            placeHolder.style.height = height + 'px';
+            placeHolder.style.height = visibleHeight + 'px';
             fragment.push(placeHolder, element);
+            this.isSplit = true;
         } else {
             fragment.push(clone);
+            this.isSplit = false;
         }
+
         return fragment;
-    }
+    },
+    handlerName: 'spliteMedia'
 });

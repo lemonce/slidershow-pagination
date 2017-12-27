@@ -5,6 +5,7 @@ import {
 	getVisibleHeight,
 	getHeight
 } from '../../utils';
+import { splitElement } from '../index';
 
 createRule({
 	test(element, container) {
@@ -20,15 +21,20 @@ createRule({
 		if (element.offsetHeight > visibleHeight) {
 			elementCopyOne.style.height = visibleHeight + 'px';
 			elementCopyOne.style.overflow = 'hidden';
+			elementCopyOne.style.marginBottom = '0px';
+			elementCopyTwo.style.marginTop = '0px';
 			elementCopyTwo.style.height = element.offsetHeight - visibleHeight + 'px';
-			elementCopyTwo.scrollTop = visibleHeight;
-			elementCopyTwo.scrollTop = visibleHeight;
+			elementCopyTwo.style.overflow = 'hidden';
+			elementCopyTwo.id = visibleHeight;
+			
 			fragment.push(elementCopyOne, elementCopyTwo);
-
+			this.isSplit = true;
 		} else {
 			fragment.push(clone);
+			this.isSplit = false;
 		}
 		
 		return fragment;
-	}
+	},
+	handlerName: 'spliteElement'
 });

@@ -21,8 +21,6 @@ createRule({
 		if (element.offsetHeight > visibleHeight) {
 			elementCopyOne.style.height = visibleHeight + 'px';
 			elementCopyOne.style.overflow = 'hidden';
-			elementCopyOne.style.marginBottom = '0px';
-			elementCopyTwo.style.marginTop = '0px';
 			elementCopyTwo.style.height = element.offsetHeight - visibleHeight + 'px';
 			elementCopyTwo.style.overflow = 'hidden';
 			elementCopyTwo.id = visibleHeight;

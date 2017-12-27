@@ -21,7 +21,7 @@ export default function update(plan) {
 		destination.replaceChild(fragment, element);
 		
 		value.replacement[1].scrollTop = parseInt(height);
-		
+
 		return;
 	}
 

@@ -8,7 +8,8 @@ import {
 	scrollNextPage,
 	empty,
 	getPadHeight,
-	addChildNodes
+	addChildNodes,
+	dealWithPageView
 } from './utils';
 import {splitElement} from './split/index';
 import update from './updater';
@@ -31,10 +32,8 @@ function renderPageview(sourceContainer, collector) {
 				const value = splitElement(node, sourceContainer);
 				const plan = new Plan(node.parentNode, value, node);
 				
-				//parent.clone.appendChild(value.replacement[0]);
 				addChildNodes(parent.clone, value);
-				//update(plan);	
-				console.log(value.replacement);
+				update(plan);	
 			} else {
 				parent.reservedLength--;
 			}
@@ -70,7 +69,7 @@ export function render(element) {
 	
 	loadPageviewContainer(collector.pageviewList, element);
 	hideElement(element);
-	//element.parentNode.removeChild(cloneView);
+	element.parentNode.removeChild(cloneView);
 }
 
 
@@ -87,9 +86,18 @@ function loadPageviewContainer(pageviewList, container) {
 	});
 
 	container.parentNode.appendChild(element);
+	container.parentNode.style.position = 'relative';
 
 	pageviewList.forEach(pageviewElement => {
-		pageviewElement.scrollTop = pageviewList.indexOf(pageviewElement) * container.offsetHeight;
+		dealWithPageView(pageviewElement);
+
+		const index = pageviewList.indexOf(pageviewElement);
+
+		pageviewElement.scrollTop = index * container.offsetHeight;
+		pageviewElement.style.position = 'absolute';
+		pageviewElement.style.left = index * container.offsetWidth + 'px';
+		pageviewElement.style.width = container.offsetWidth + 'px';
+		// pageviewElement.style.top = index * container.offsetTop + 'px';
 	});
 	
 }

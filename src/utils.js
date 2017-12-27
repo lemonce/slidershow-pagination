@@ -98,21 +98,22 @@ export function addChildNodes(parent, value) {
 
 		parent.appendChild(fragment);
 
-		value.replacement.forEach(part => {
-			if (part.id) {
-				part.scrollTop = part.id;
-			}
-		});
-		//value.replacement[1].scrollTop = parseInt(height);
-		
 		return;
 	}
 	
 	parent.appendChild(value.replacement[0]);
-	
-	if (value.replacement[0].id) {
-		console.log(value.replacement[0]);
-		value.replacement[0].scrollTop = value.replacement[0].id;
-	}
 
+}
+
+export function dealWithPageView(pageview) {
+	const nodeList = pageview.children;
+
+	[].slice.call(nodeList).forEach(part => {
+		if (part.id) {
+			part.scrollTop = part.id;
+			console.log(part.id);
+		}
+
+		return;
+	});
 }

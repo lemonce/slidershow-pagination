@@ -1,13 +1,11 @@
 'use strict';
 const ruleList = [];
 
-export class Rule {
-	constructor({test, handler, priority = 1000, handlerName, isSplit = false}) {
+class Rule {
+	constructor({test, handler, priority = 1000}) {
 		this.$test = test;
 		this.$handler = handler;
 		this.priority = priority;
-		this.handlerName = handlerName;
-		this.isSplit = isSplit;
 	}
 
 	test(element, container) {
@@ -33,15 +31,15 @@ export function getReplacement(elementInCloneView, container) {
 		return rule.test(elementInCloneView, container);
 	});
 
-	let value;
+	let fragmentList = [];
+	if (targetRuleList.length) {
+		targetRuleList.forEach(rule => {
+			fragmentList = rule.render(elementInCloneView, container);
+		});
 
-	targetRuleList.forEach(rule => {
-		value = {
-			replacement: rule.render(elementInCloneView, container),
-			handlerName: rule.handlerName,
-			isSplit: rule.isSplit
-		}
-	});
+	} else {
+		fragmentList.push(elementInCloneView);
+	}
 
-	return value;
+	return fragmentList;
 };

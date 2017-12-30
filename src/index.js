@@ -7,7 +7,6 @@ import {
 	hideElement,
 	scrollNextPage,
 	empty,
-	getPadHeight,
 	addChildNodes,
 	dealWithPageView
 } from './utils';
@@ -29,17 +28,18 @@ function renderPageview(sourceContainer, collector) {
 		},
 		post(node, local, parent) {
 			if (isReserved(local)) {
-				const value = splitElement(node, sourceContainer);
-				const plan = new Plan(node.parentNode, value, node);
+				const replacement = splitElement(node, sourceContainer);
+				const updateCloneViewPlan = new Plan(node.parentNode, replacement, node);
+				const updatePageViewPlan = new Plan(parent.clone, replacement, node, sourceContainer, local.clone);
 				
-				addChildNodes(parent.clone, value);
-				update(plan);	
+				update(updateCloneViewPlan);
+				update(updatePageViewPlan);				
 			} else {
 				parent.reservedLength--;
 			}
+			
 		} 
 	}, rootData);
-
 	return rootData.clone;	
 }
 
@@ -56,20 +56,15 @@ export function render(element) {
 	cloneView.style.overflow = 'hidden';
 	element.parentNode.insertBefore(cloneView, element);
 
-	const height = getPadHeight(cloneView);
-	const filling = document.createElement('div');
-
-	filling.style.height = height + 'px';
-	cloneView.appendChild(filling);
-	cloneView.appendChild(filling);
-
 	do {
+
 		renderPageview(cloneView, collector);
 	} while(scrollNextPage(cloneView))
-	
+
 	loadPageviewContainer(collector.pageviewList, element);
-	hideElement(element);
-	element.parentNode.removeChild(cloneView);
+	// hideElement(element);
+	//element.parentNode.removeChild(cloneView);
+
 }
 
 
@@ -77,6 +72,8 @@ export function render(element) {
 //TODO deal with pageviewList
 function loadPageviewContainer(pageviewList, container) {
 	const element = document.createElement('div');
+	const width = container.offsetWidth;
+	const height = container.offsetHeight;
 
 	element.style.backgroundColor = 'yellow';
 
@@ -88,16 +85,28 @@ function loadPageviewContainer(pageviewList, container) {
 	container.parentNode.appendChild(element);
 	container.parentNode.style.position = 'relative';
 
-	pageviewList.forEach(pageviewElement => {
+	pageviewList.forEach((pageviewElement, i) => {
 		dealWithPageView(pageviewElement);
 
-		const index = pageviewList.indexOf(pageviewElement);
+		if (i > 0) {
+			const pageViewScrollTop = pageviewList[i-1].scrollHeight;
+			const fillingHeight = height - (pageviewElement.scrollHeight - pageViewScrollTop);
+			
+			if (fillingHeight >= 0) {
+				const filling = document.createElement('div');
 
-		pageviewElement.scrollTop = index * container.offsetHeight;
+				filling.style.height = fillingHeight + 'px';
+				pageviewElement.appendChild(filling);
+				pageviewElement.scrollTop = pageViewScrollTop;
+			} else {
+				pageviewElement.scrollTop = height * i + fillingHeight;
+			}
+		}
+
 		pageviewElement.style.position = 'absolute';
-		pageviewElement.style.left = index * container.offsetWidth + 'px';
-		pageviewElement.style.width = container.offsetWidth + 'px';
-		// pageviewElement.style.top = index * container.offsetTop + 'px';
+		pageviewElement.style.left = i * width + 'px';
+		pageviewElement.style.width = width + 'px';
+
 	});
 	
 }

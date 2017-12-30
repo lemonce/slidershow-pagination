@@ -19,12 +19,16 @@ export function isAllOverflow(container, node) {
 	if (container === node) {
 		return true;
     }
-    
-	return node.offsetTop - container.scrollTop < container.offsetHeight;
+
+	if (node.nodeType === 3) {
+		node = node.parentNode;
+	}
+	return node.offsetTop - container.scrollTop >= container.offsetHeight;
 }
 
 export function isReserved({isAllOverflow, reservedLength}) {
-	return isAllOverflow || reservedLength;
+    
+	return !isAllOverflow || reservedLength;
 }
 
 export function getPadHeight(element){
@@ -39,13 +43,8 @@ export function isScrollable({scrollTop, offsetHeight, scrollHeight}) {
 	return scrollTop + offsetHeight < scrollHeight;
 }
 
-
-export function getVisibleHeight(element, container) {
-	const elementOffsetTop = element.offsetTop;
-	const containerScrollTop = container.scrollTop;
-	const containerOffsetHeight = container.offsetHeight;
-
-	return containerOffsetHeight + containerScrollTop - elementOffsetTop;
+function isFill({scrollTop, offsetHeight, scrollHeight}) {
+	return scrollHeight - scrollTop < offsetHeight;
 }
 
 export function hideElement(element) {
@@ -57,12 +56,13 @@ export function hideElement(element) {
 
 export function scrollNextPage(element) {
 	if (isScrollable(element)) {
+
 		element.scrollTop += element.offsetHeight;
-		
 		return true;
+	} else {
+		return false;
 	}
 
-	return false;
 }
 
 export function empty(element) {
@@ -71,47 +71,12 @@ export function empty(element) {
 	}
 }
 
-export function getHeight(element, visibleHeight, container) {
-	const fontSize = window.getComputedStyle(element, null).fontSize;
-	let lineHeight = window.getComputedStyle(element, null).lineHeight;
-	const width = container.scrollWidth;
-
-	if (lineHeight === 'normal') {
-		lineHeight = fontSize;
-	}
-
-	const rows = Math.floor(visibleHeight / parseInt(lineHeight));
-	const columns = Math.floor(width / parseInt(fontSize));
-
-	return rows * columns;
-}
-
-export function addChildNodes(parent, value) {
-	
-	if (value.handlerName === 'spliteElement' && value.isSplit) {
-		const fragment = document.createDocumentFragment();
-		//const height = value.replacement[0].style.height;
-
-		value.replacement.forEach(part => {
-			fragment.appendChild(part);
-		});
-
-		parent.appendChild(fragment);
-
-		return;
-	}
-	
-	parent.appendChild(value.replacement[0]);
-
-}
-
 export function dealWithPageView(pageview) {
 	const nodeList = pageview.children;
 
 	[].slice.call(nodeList).forEach(part => {
-		if (part.id) {
-			part.scrollTop = part.id;
-			console.log(part.id);
+		if (part.lang) {
+			part.scrollTop = Math.ceil(part.lang);
 		}
 
 		return;

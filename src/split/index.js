@@ -2,10 +2,7 @@
 
 import {getReplacement} from './class/rule';
 
-import './rule/text';
-import './rule/media';
-import './rule/element';
-import './rule/container';
+import './rule/commonElementSplitRule';
 
 export function splitElement(element, container) {
 	

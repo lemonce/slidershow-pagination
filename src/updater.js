@@ -1,28 +1,59 @@
+import { dealWithPageView } from "./utils";
+
 'use strict'
 
-export default function update(plan) {
-	const value = plan.replacement;
-	const destination = plan.destination;
-	const element = plan.element;
+export default function update({destination, replacement, element, sourceContainer,localClone}) {
+    const destinationView = destination;
+    const fragmentList = replacement;
+    const originalElement = element;
+    const elementParent = originalElement.parentNode;
+    const fragmentNumber = replacement.length;
 
-	
-	if (value.handlerName === 'spliteContainer') {
-		return;
-	}
+    if (destinationView === elementParent) {
+        switch (fragmentNumber) {
+            case 1:
+                break;
+            case 2:
+                destinationView.insertBefore(fragmentList[0], originalElement);
 
-	if (value.handlerName === 'spliteElement' && value.isSplit) {
-		const height = value.replacement[0].style.height;
-		const fragment = document.createDocumentFragment();
+                break;
+            case 3:
+                const fragmentContainer = document.createDocumentFragment();
 
-		value.replacement.forEach(part => {
-			fragment.appendChild(part);
-		});
+                fragmentList.forEach(member => {
+                    fragmentContainer.appendChild(member); 
+                });
+                destinationView.replaceChild(fragmentContainer, originalElement);
+                fragmentList.forEach(member => {
+                    if (Math.ceil(member.lang)) {
+                        member.scrollTop = Math.ceil(member.lang);
+                    }
+                });
 
-		destination.replaceChild(fragment, element);
-		
-		value.replacement[1].scrollTop = parseInt(height);
+                break;
+        }
+    } else {
+        const container = sourceContainer;
+        const cloneView = localClone;
 
-		return;
-	}
+        switch (fragmentNumber) {
+            case 1:
+                if (fragmentList[0] === container) {
+                    destinationView.appendChild(cloneView);
 
+                    return;
+                }
+                 destinationView.appendChild(fragmentList[0].cloneNode(true));
+
+                break;
+            case 2:
+                destinationView.appendChild(fragmentList[0].cloneNode(true));
+
+                break;
+            case 3:
+                destinationView.appendChild(fragmentList[0].cloneNode(true), fragmentList[1]);
+
+                break;
+        }
+    }
 }

@@ -1,10 +1,12 @@
 'use strict';
 
 export default class Plan{
-	constructor(destination, replacement, element) {
+	constructor(destination, replacement, element, sourceContainer, localClone) {
 		this.$destination = destination;
 		this.$replacement = replacement;
 		this.$element = element;
+		this.$sourceContainer = sourceContainer;
+		this.$localClone = localClone;
 	}
 	
 	get destination() {
@@ -18,4 +20,13 @@ export default class Plan{
 	get element() {
 		return this.$element;
 	}
+
+	get sourceContainer() {
+		return this.$sourceContainer;
+	}
+
+	get localClone() {
+		return this.$localClone;
+	}
+
 }

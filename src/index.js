@@ -6,7 +6,6 @@ import {
 	isReserved,
 	hideElement,
 	scrollNextPage,
-	empty,
 	addChildNodes,
 	dealWithPageView
 } from './utils';
@@ -29,7 +28,7 @@ function renderPageview(sourceContainer, collector) {
 		post(node, local, parent) {
 			if (isReserved(local)) {
 				const replacement = splitElement(node, sourceContainer);
-				const updateCloneViewPlan = new Plan(node.parentNode, replacement, node, sourceContainer,);
+				const updateCloneViewPlan = new Plan(node.parentNode, replacement, node, sourceContainer);
 				const updatePageViewPlan = new Plan(parent.clone, replacement, node, sourceContainer, local.clone);
 				
 				update(updateCloneViewPlan);
@@ -58,6 +57,7 @@ export function render(element) {
 
 	do {
 		renderPageview(cloneView, collector);
+		console.log(collector.pageviewList);
 	} while(scrollNextPage(cloneView))
 
 	loadPageviewContainer(collector.pageviewList, element);

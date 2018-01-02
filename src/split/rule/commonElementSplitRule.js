@@ -8,7 +8,7 @@ import {
 
 createRule({
 	test: function(element, container) {
-		if (element.nodeType !== 1 || element === container || element.tagName === 'BR' || element.tagName === 'TABLE' || element.tagName === 'TBODY' || element.tagName === 'TFOOT' || element.tagName === 'FORM') {
+		if (element.nodeType !== 1 || element === container || element.tagName === 'BR' || element.tagName === 'TABLE' || element.tagName === 'TD' || element.tagName === 'UL' || element.tagName === 'TBODY' || element.tagName === 'TFOOT' || element.tagName === 'FORM') {
 			return false;
 		} else if (window.getComputedStyle(element, null).display === 'inline') {
 			return false;
@@ -33,8 +33,8 @@ createRule({
 				dealWithElementAfterSplit(filling, visibleHeight - elementCopyHeight);
 				dealWithElementAfterSplit(copyTwo, elementHeight - elementCopyHeight);
 				
-			   copyTwo.lang = elementCopyHeight;
-			   fragmentList.push(elementCopy, filling, copyTwo);
+				copyTwo.lang = parseFloat(copyTwo.lang) || 0 + elementCopyHeight;
+				fragmentList.push(elementCopy, filling, copyTwo);
 			} else {
 				dealWithElementAfterSplit(filling, visibleHeight);
 

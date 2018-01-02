@@ -1,12 +1,12 @@
 'use strict';
 
+import {elementOffsetTop} from '../../utils';
+
 export function getVisibleHeight(element, container) {
-    const elementOffsetTop = element.offsetTop;
     const containerScrollTop = container.scrollTop;
     const containerOffsetHeight = container.offsetHeight;
-    const containerOffsetTop = container.offsetTop;
     
-    return containerScrollTop + containerOffsetHeight + containerOffsetTop - elementOffsetTop;
+    return containerScrollTop + containerOffsetHeight - elementOffsetTop(element, container);
 }
 
 export function dealWithVisibleHeight(visibleHeight, element) {

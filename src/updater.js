@@ -14,9 +14,9 @@ export default function update({destination, replacement, element, sourceContain
             case 1:
                 break;
             case 2:
-                console.log(destinationView,fragmentList[0],originalElement);
+                console.log(fragmentList,sourceContainer.scrollTop, originalElement);
                 destinationView.insertBefore(fragmentList[0], originalElement);
-                console.log(destinationView,fragmentList[0],originalElement);
+                console.log(fragmentList, sourceContainer.scrollTop, originalElement);
 
                 break;
             case 3:
@@ -27,8 +27,8 @@ export default function update({destination, replacement, element, sourceContain
                 });
                 destinationView.replaceChild(fragmentContainer, originalElement);
                 fragmentList.forEach(member => {
-                    if (Math.ceil(member.lang)) {
-                        member.scrollTop = Math.ceil(member.lang);
+                    if (parseFloat(member.lang)) {
+                        member.scrollTop = parseFloat(member.lang);
                     }
                 });
 
@@ -41,7 +41,7 @@ export default function update({destination, replacement, element, sourceContain
 
         switch (fragmentNumber) {
             case 1:
-                if (fragmentList[0] === container || fragmentList[0].tagName === 'TABLE' || fragmentList[0].tagName === 'TBODY' || fragmentList[0].tagName === 'TFOOT' || fragmentList[0].tagName === 'FORM') {
+                if (fragmentList[0] === container || fragmentList[0].tagName === 'TABLE' || element.tagName === 'TD' || fragmentList[0].tagName === 'UL' || fragmentList[0].tagName === 'TBODY' || fragmentList[0].tagName === 'TFOOT' || fragmentList[0].tagName === 'FORM') {
                     destinationView.appendChild(cloneView);
 
                     return;

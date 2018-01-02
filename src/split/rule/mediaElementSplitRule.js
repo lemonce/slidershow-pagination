@@ -6,7 +6,7 @@ import {
 	dealWithVisibleHeight
 } from './util';
 
-const mediaList = ['IMG', 'AUDIO', 'VODEO', 'TR', 'TD', 'INPUT', 'TEXTAREA', 'RADIO', 'CHECKBOX', 'SELECT', 'OPTION']
+const mediaList = ['IMG', 'AUDIO', 'VIDEO', 'TR', 'INPUT', 'TEXTAREA', 'RADIO', 'CHECKBOX', 'SELECT', 'OPTION']
 
 createRule({
 	test: function(element, container) {
@@ -28,7 +28,16 @@ createRule({
 		if (visibleHeight <= 0 || visibleHeight >= elementHeight) {
 			fragmentList.push(element);
 		} else {
-            const filling = document.createElement('div');
+			let filling;
+
+			if (window.getComputedStyle(element, null).display === 'inline') {
+
+				filling = document.createElement(element.tagName);
+				filling.style.visibility = 'hidden';
+			} else {
+				filling = document.createElement('div');
+
+			}
             
             dealWithElementAfterSplit(filling, visibleHeight);
             fragmentList.push(filling, element);

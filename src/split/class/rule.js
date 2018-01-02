@@ -31,12 +31,13 @@ export function getReplacement(elementInCloneView, container) {
 		return rule.test(elementInCloneView, container);
 	});
 
+	targetRuleList.sort((pre, next) => {
+		return next.priority - pre.priority;
+	});
+
 	let fragmentList = [];
 	if (targetRuleList.length) {
-		targetRuleList.forEach(rule => {
-			fragmentList = rule.render(elementInCloneView, container);
-		});
-
+		fragmentList = targetRuleList[0].render(elementInCloneView, container);
 	} else {
 		fragmentList.push(elementInCloneView);
 	}

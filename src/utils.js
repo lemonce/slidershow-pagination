@@ -23,12 +23,17 @@ export function isAllOverflow(container, node) {
 	if (node.nodeType === 3) {
 		node = node.parentNode;
 	}
+
 	return node.offsetTop - container.scrollTop >= container.offsetHeight;
 }
 
 export function isReserved({isAllOverflow, reservedLength}) {
     
 	return !isAllOverflow || reservedLength;
+}
+
+export function isScrollable({scrollTop, offsetHeight, scrollHeight}) {
+	return scrollTop + offsetHeight < scrollHeight;
 }
 
 export function getPadHeight(element){
@@ -38,25 +43,8 @@ export function getPadHeight(element){
 	return containerHeight - contentHeight % containerHeight;
 }
 
-
-export function isScrollable({scrollTop, offsetHeight, scrollHeight}) {
-	return scrollTop + offsetHeight < scrollHeight;
-}
-
-function isFill({scrollTop, offsetHeight, scrollHeight}) {
-	return scrollHeight - scrollTop < offsetHeight;
-}
-
-export function hideElement(element) {
-	element.style.position = 'absolute';
-	element.style.top = '0px';
-	element.style.zIndex = -100;
-	element.style.opacity = 0;
-}
-
 export function scrollNextPage(element) {
 	if (isScrollable(element)) {
-
 		element.scrollTop += element.offsetHeight;
 		return true;
 	} else {
@@ -71,14 +59,36 @@ export function empty(element) {
 	}
 }
 
-export function dealWithPageView(pageview) {
-	const nodeList = pageview.children;
+export function dealWithPageView(pageviewElement, i, height, width) {
+	const nodeList = pageviewElement.children;
 
 	[].slice.call(nodeList).forEach(part => {
-		if (part.lang) {
+		if (Math.ceil(part.lang)) {
 			part.scrollTop = Math.ceil(part.lang);
 		}
 
 		return;
 	});
+
+	const pageViewScrollTop = i * height;
+
+	if (pageViewScrollTop + height > pageviewElement.scrollHeight) {
+		const fillingHeight = pageViewScrollTop + height - pageviewElement.scrollHeight;
+		const filling = document.createElement('div');
+	
+		filling.style.height = fillingHeight + 'px';
+		pageviewElement.appendChild(filling);
+	}
+
+	pageviewElement.scrollTop = pageViewScrollTop;
+	pageviewElement.style.position = 'absolute';
+	pageviewElement.style.left = i * width + 'px';
+	pageviewElement.style.width = width + 'px';
+}
+
+export function hideElement(element) {
+	element.style.position = 'absolute';
+	element.style.top = '0px';
+	element.style.zIndex = -100;
+	element.style.opacity = 0;
 }

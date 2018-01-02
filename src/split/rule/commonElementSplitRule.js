@@ -8,7 +8,9 @@ import {
 
 createRule({
 	test: function(element, container) {
-		if (element.nodeType !== 1 || element === container) {
+		if (element.nodeType !== 1 || element === container || element.tagName === 'BR' || element.tagName === 'TABLE' || element.tagName === 'TBODY' || element.tagName === 'TFOOT' || element.tagName === 'FORM') {
+			return false;
+		} else if (window.getComputedStyle(element, null).display === 'inline') {
 			return false;
 		} else {
 			return true;
@@ -40,10 +42,12 @@ createRule({
 			}
 
 		}
-
+		
 		return fragmentList;
-	}
+	},
+	priority: 0
 });
+
 function dealWithElementAfterSplit(element, height) {
 	element.style.height = height + 'px';
 	element.style.overflow = 'hidden';
@@ -51,16 +55,16 @@ function dealWithElementAfterSplit(element, height) {
 	return element;
 }
 
-function dealWithElementHeight(computedHeight, element) {
-	const fontSize = window.getComputedStyle(element, null).fontSize;
-	const displayType = window.getComputedStyle(element, null).display;
-	let height;
+// function dealWithElementHeight(computedHeight, element) {
+// 	const fontSize = window.getComputedStyle(element, null).fontSize;
+// 	const displayType = window.getComputedStyle(element, null).display;
+// 	let height;
 	
-	if (height === 'auto') {
-		height = parseFloat(fontSize);
-	} else {
-		height = parseFloat(computedHeight);
-	}
+// 	if (height === 'auto') {
+// 		height = parseFloat(fontSize);
+// 	} else {
+// 		height = parseFloat(computedHeight);
+// 	}
 
-	return height;
-}
+// 	return height;
+// }

@@ -29,7 +29,7 @@ function renderPageview(sourceContainer, collector) {
 		post(node, local, parent) {
 			if (isReserved(local)) {
 				const replacement = splitElement(node, sourceContainer);
-				const updateCloneViewPlan = new Plan(node.parentNode, replacement, node);
+				const updateCloneViewPlan = new Plan(node.parentNode, replacement, node, sourceContainer,);
 				const updatePageViewPlan = new Plan(parent.clone, replacement, node, sourceContainer, local.clone);
 				
 				update(updateCloneViewPlan);
@@ -57,13 +57,12 @@ export function render(element) {
 	element.parentNode.insertBefore(cloneView, element);
 
 	do {
-
 		renderPageview(cloneView, collector);
 	} while(scrollNextPage(cloneView))
 
 	loadPageviewContainer(collector.pageviewList, element);
 	// hideElement(element);
-	//element.parentNode.removeChild(cloneView);
+	// element.parentNode.removeChild(cloneView);
 
 }
 
@@ -86,26 +85,7 @@ function loadPageviewContainer(pageviewList, container) {
 	container.parentNode.style.position = 'relative';
 
 	pageviewList.forEach((pageviewElement, i) => {
-		dealWithPageView(pageviewElement);
-
-		if (i > 0) {
-			const pageViewScrollTop = pageviewList[i-1].scrollHeight;
-			const fillingHeight = height - (pageviewElement.scrollHeight - pageViewScrollTop);
-			
-			if (fillingHeight >= 0) {
-				const filling = document.createElement('div');
-
-				filling.style.height = fillingHeight + 'px';
-				pageviewElement.appendChild(filling);
-				pageviewElement.scrollTop = pageViewScrollTop;
-			} else {
-				pageviewElement.scrollTop = height * i + fillingHeight;
-			}
-		}
-
-		pageviewElement.style.position = 'absolute';
-		pageviewElement.style.left = i * width + 'px';
-		pageviewElement.style.width = width + 'px';
+		dealWithPageView(pageviewElement, i, height, width);
 
 	});
 	

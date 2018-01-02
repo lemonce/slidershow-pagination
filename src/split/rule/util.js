@@ -4,8 +4,9 @@ export function getVisibleHeight(element, container) {
     const elementOffsetTop = element.offsetTop;
     const containerScrollTop = container.scrollTop;
     const containerOffsetHeight = container.offsetHeight;
-
-    return containerScrollTop + containerOffsetHeight - elementOffsetTop;
+    const containerOffsetTop = container.offsetTop;
+    
+    return containerScrollTop + containerOffsetHeight + containerOffsetTop - elementOffsetTop;
 }
 
 export function dealWithVisibleHeight(visibleHeight, element) {

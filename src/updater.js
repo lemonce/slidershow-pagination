@@ -14,7 +14,9 @@ export default function update({destination, replacement, element, sourceContain
             case 1:
                 break;
             case 2:
+                console.log(destinationView,fragmentList[0],originalElement);
                 destinationView.insertBefore(fragmentList[0], originalElement);
+                console.log(destinationView,fragmentList[0],originalElement);
 
                 break;
             case 3:
@@ -32,13 +34,14 @@ export default function update({destination, replacement, element, sourceContain
 
                 break;
         }
+
     } else {
         const container = sourceContainer;
         const cloneView = localClone;
 
         switch (fragmentNumber) {
             case 1:
-                if (fragmentList[0] === container) {
+                if (fragmentList[0] === container || fragmentList[0].tagName === 'TABLE' || fragmentList[0].tagName === 'TBODY' || fragmentList[0].tagName === 'TFOOT' || fragmentList[0].tagName === 'FORM') {
                     destinationView.appendChild(cloneView);
 
                     return;

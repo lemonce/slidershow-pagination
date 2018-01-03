@@ -21,6 +21,12 @@ createRule({
         return flag;
 	},
 	handler: function(element, container) {
+		if (element.offsetHeight > container.offsetHeight) {
+			console.log('warning');
+
+			return;
+		}
+
 		const visibleHeight = getVisibleHeight(element, container);
 		const elementHeight = element.offsetHeight;
 		const fragmentList = [];
@@ -35,11 +41,10 @@ createRule({
 				filling = document.createElement(element.tagName);
 				filling.style.visibility = 'hidden';
 			} else {
-				filling = document.createElement('div');
-
+				filling = document.createElement('div');	
 			}
             
-            dealWithElementAfterSplit(filling, visibleHeight);
+            dealWithElementAfterSplit(filling, visibleHeight, container.offsetWidth);
             fragmentList.push(filling, element);
 		}
 		
@@ -48,8 +53,9 @@ createRule({
     priority:1
 });
 
-function dealWithElementAfterSplit(element, height) {
+function dealWithElementAfterSplit(element, height, width) {
 	element.style.height = height + 'px';
+	element.style.width = width + 'px';
 	element.style.overflow = 'hidden';
 
 	return element;

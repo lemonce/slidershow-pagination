@@ -14,9 +14,7 @@ export default function update({destination, replacement, element, sourceContain
             case 1:
                 break;
             case 2:
-                console.log(fragmentList,sourceContainer.scrollTop, originalElement);
                 destinationView.insertBefore(fragmentList[0], originalElement);
-                console.log(fragmentList, sourceContainer.scrollTop, originalElement);
 
                 break;
             case 3:

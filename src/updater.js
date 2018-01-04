@@ -12,6 +12,15 @@ export default function update({destination, replacement, element, sourceContain
     if (destinationView === elementParent) {
         switch (fragmentNumber) {
             case 1:
+                if (fragmentList[0].tagName === 'VIDEO') {
+                    const videoReplacement = document.createElement('div');
+
+                    videoReplacement.style.height = fragmentList[0].offsetHeight + 'px';
+                    videoReplacement.style.width = fragmentList[0].offsetWidth + 'px';
+
+                    destination.replaceChild(videoReplacement, originalElement);
+                }
+
                 break;
             case 2:
                 destinationView.insertBefore(fragmentList[0], originalElement);

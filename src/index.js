@@ -53,6 +53,10 @@ export class Paginator extends EventEmitter {
 
 		this.emit('destroy');
 	}
+
+	$isRemoved() {
+		
+	}
 	
 	$isChanged() {
 		return this._isChanged(this.sourceElement, this.state);

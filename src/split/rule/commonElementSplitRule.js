@@ -3,7 +3,8 @@
 import {createRule} from '../class/rule';
 import {
 	getVisibleHeight,
-	dealWithVisibleHeight
+	dealWithVisibleHeight,
+	dealWithElementAfterSplit
 } from './util';
 
 createRule({
@@ -48,23 +49,3 @@ createRule({
 	priority: 0
 });
 
-function dealWithElementAfterSplit(element, height) {
-	element.style.height = height + 'px';
-	element.style.overflow = 'hidden';
-
-	return element;
-}
-
-// function dealWithElementHeight(computedHeight, element) {
-// 	const fontSize = window.getComputedStyle(element, null).fontSize;
-// 	const displayType = window.getComputedStyle(element, null).display;
-// 	let height;
-	
-// 	if (height === 'auto') {
-// 		height = parseFloat(fontSize);
-// 	} else {
-// 		height = parseFloat(computedHeight);
-// 	}
-
-// 	return height;
-// }

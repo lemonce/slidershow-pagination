@@ -3,10 +3,11 @@
 import {createRule} from '../class/rule';
 import {
 	getVisibleHeight,
-	dealWithVisibleHeight
+	dealWithVisibleHeight,
+	dealWithElementAfterSplit
 } from './util';
 
-const mediaList = ['IMG', 'AUDIO', 'VIDEO', 'TR', 'INPUT', 'TEXTAREA', 'RADIO', 'CHECKBOX', 'SELECT', 'OPTION']
+const mediaList = ['IMG', 'AUDIO', 'VIDEO', 'TR', 'INPUT', 'TEXTAREA', 'RADIO', 'CHECKBOX', 'SELECT', 'OPTION'];
 
 createRule({
 	test: function(element, container) {
@@ -40,6 +41,7 @@ createRule({
 
 				filling = document.createElement(element.tagName);
 				filling.style.visibility = 'hidden';
+				
 			} else {
 				filling = document.createElement('div');	
 			}
@@ -52,11 +54,3 @@ createRule({
     },
     priority:1
 });
-
-function dealWithElementAfterSplit(element, height, width) {
-	element.style.height = height + 'px';
-	element.style.width = width + 'px';
-	element.style.overflow = 'hidden';
-
-	return element;
-}

@@ -28,3 +28,11 @@ function dealWithLineHeight(lineHeight, fontSize) {
 
     return lineHeight
 }
+
+export function dealWithElementAfterSplit(element, height, width) {
+    element.style.height = height + 'px';
+    element.style.width = width + 'px';
+	element.style.overflow = 'hidden';
+
+	return element;
+}
